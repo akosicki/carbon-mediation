@@ -50,7 +50,7 @@ public class SubprotocolBuilderUtil {
             }
         }
 
-        return array;
+        return array.concat("json").concat(",");
     }
 
     public static String syanapeSubprotocolToContentType(String subprotocol) {
@@ -61,6 +61,9 @@ public class SubprotocolBuilderUtil {
             subprotocol = subprotocol.trim();
             return subprotocol;
         } else {
+            if ("json".equals(subprotocol)) {
+                return "application/json";
+            }
             return null;
         }
     }
@@ -71,6 +74,11 @@ public class SubprotocolBuilderUtil {
             if (subprotocol.contains(InboundWebsocketConstants.SYNAPSE_SUBPROTOCOL_PREFIX)) {
                 return subprotocol;
             }
+        }
+
+        assert combinedSubprotocol != null;
+        if (combinedSubprotocol.contains("json")) {
+            return "json";
         }
         return null;
     }

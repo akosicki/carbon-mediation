@@ -295,8 +295,9 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
                     return;
                 } else if ((frame instanceof TextWebSocketFrame) && ((handshaker.selectedSubprotocol() == null) ||
                         (handshaker.selectedSubprotocol() != null
-                                && !handshaker.selectedSubprotocol().contains(
-                                        InboundWebsocketConstants.SYNAPSE_SUBPROTOCOL_PREFIX)))) {
+                                && !(handshaker.selectedSubprotocol().contains(
+                                        InboundWebsocketConstants.SYNAPSE_SUBPROTOCOL_PREFIX)
+                                    || handshaker.selectedSubprotocol().contains("json"))))) {
                     String contentType = handshaker.selectedSubprotocol();
                     if(contentType == null && defaultContentType != null) {
                         contentType = defaultContentType;
@@ -321,8 +322,9 @@ public class InboundWebsocketSourceHandler extends ChannelInboundHandlerAdapter 
                     injectToSequence(synCtx, endpoint);
                     return;
                 } else if ((frame instanceof TextWebSocketFrame) && handshaker.selectedSubprotocol() != null
-                        && handshaker.selectedSubprotocol().contains(
-                                InboundWebsocketConstants.SYNAPSE_SUBPROTOCOL_PREFIX)) {
+                        && (handshaker.selectedSubprotocol().contains(
+                                InboundWebsocketConstants.SYNAPSE_SUBPROTOCOL_PREFIX)
+                            || handshaker.selectedSubprotocol().contains("json"))) {
                     CustomLogSetter.getInstance().setLogAppender(endpoint.getArtifactContainerName());
 
                     String message = ((TextWebSocketFrame) frame).text();
